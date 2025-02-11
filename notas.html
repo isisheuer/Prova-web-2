@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloco de Notas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="notas.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Bloco de Notas</h2>
+        <textarea id="notaInput" class="form-control" placeholder="Digite sua nota aqui..."></textarea>
+        <button class="btn btn-primary" id="addNotaBtn">Adicionar Nota</button>
+        <ul class="notas" id="notasList"></ul>
+    </div>
+
+    <script>
+        const notaInput = document.getElementById('notaInput');
+        const addNotaBtn = document.getElementById('addNotaBtn');
+        const notasList = document.getElementById('notasList');
+
+        function addNota() {
+            const notaTexto = notaInput.value.trim();
+            
+            if (notaTexto) {
+                const notaItem = document.createElement('li');
+                notaItem.classList.add('nota');
+                
+                const notaTextoElement = document.createElement('span');
+                notaTextoElement.textContent = notaTexto;
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Excluir';
+                deleteBtn.classList.add('btn', 'btn-danger', 'delete-btn');
+                deleteBtn.onclick = function() {
+                    notasList.removeChild(notaItem);
+                };
+                
+                notaItem.appendChild(notaTextoElement);
+                notaItem.appendChild(deleteBtn);
+                
+                notasList.appendChild(notaItem);
+                
+                notaInput.value = '';
+            }
+        }
+
+        addNotaBtn.addEventListener('click', addNota);
+
+        notaInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addNota();
+            }
+        });
+    </script>
+</body>
+</html>

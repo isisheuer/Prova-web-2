@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronometro</title>
+    <link rel="stylesheet" href="cronometro.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    
+    <div class="container">
+        <h1>Cronometro.JS</h1>
+        <div class="timer">
+            <div class="numeros" id="minutos">00</div>
+            <div class="separador">:</div>
+            <div class="numeros" id="segundos">00</div>
+            <div class="separador">:</div>
+            <div class="numeros" id="milisegundos">000</div>
+        </div>
+    </div>
+    <div class="buttons">
+        <button type="button" class="btn btn-primary">Iniciar</button>
+        <button type="button" class="btn btn-primary">Pausar</button>
+        <button type="button" class="btn btn-primary">Continuar</button>
+        <button type="button" class="btn btn-primary">Resetar</button>
+    </div>
+
+    <script>
+    let minutos = 0;
+    let segundos = 0;
+    let milisegundos = 0;
+    let intervalo;
+    let rodando = false;
+
+    const minutosDisplay = document.getElementById("minutos");
+    const segundosDisplay = document.getElementById("segundos");
+    const milisegundosDisplay = document.getElementById("milisegundos");
+    const botaoIniciar = document.querySelectorAll(".btn")[0];
+    const botaoPausar = document.querySelectorAll(".btn")[1];
+    const botaoContinuar = document.querySelectorAll(".btn")[2];
+    const botaoResetar = document.querySelectorAll(".btn")[3];
+
+    function atualizarDisplay() {
+        minutosDisplay.textContent = minutos < 10 ? "0" + minutos : minutos;
+        segundosDisplay.textContent = segundos < 10 ? "0" + segundos : segundos;
+        milisegundosDisplay.textContent = milisegundos < 10 ? "00" + milisegundos : (milisegundos < 100 ? "0" + milisegundos : milisegundos);
+    }
+
+    function iniciarCronometro() {
+        intervalo = setInterval(function() {
+        milisegundos++;
+        
+        if (milisegundos >= 1000) {
+            milisegundos = 0;
+            segundos++;
+        }
+        
+        if (segundos >= 60) {
+            segundos = 0;
+            minutos++;
+        }
+
+        atualizarDisplay();
+    }, 1);
+}
+
+function pausarCronometro() {
+    clearInterval(intervalo);
+    rodando = false;
+}
+
+function resetarCronometro() {
+    clearInterval(intervalo);
+    minutos = 0;
+    segundos = 0;
+    milisegundos = 0;
+    atualizarDisplay();
+    rodando = false;
+}
+
+botaoIniciar.addEventListener("click", function() {
+    if (!rodando) {
+        rodando = true;
+        iniciarCronometro();
+        botaoIniciar.disabled = true;
+        botaoPausar.disabled = false;
+        botaoResetar.disabled = false;
+    }
+});
+
+botaoPausar.addEventListener("click", function() {
+    if (rodando) {
+        pausarCronometro();
+        botaoIniciar.disabled = false;
+        botaoContinuar.disabled = false;
+    }
+});
+
+botaoContinuar.addEventListener("click", function() {
+    if (!rodando) {
+        rodando = true;
+        iniciarCronometro();
+        botaoIniciar.disabled = true;
+        botaoPausar.disabled = false;
+    }
+});
+
+botaoResetar.addEventListener("click", function() {
+    resetarCronometro();
+    botaoIniciar.disabled = false;
+    botaoPausar.disabled = true;
+    botaoContinuar.disabled = true;
+    botaoResetar.disabled = true;
+});
+
+    </script>
+</body>
+</html>
